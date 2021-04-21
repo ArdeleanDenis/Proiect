@@ -9,4 +9,4 @@ hi = supa.select('.hasTooltip')         #selectam toate obiectele din cadrul cla
 print(hi)
 for i in supa.select('.hasTooltip'):        #filtram doar elementele din subclasa a prin care putem afla titlul evenimentului si data(ziua)
     print(i.a)
-"""ddddddddd imi place pula"""
+#dana are mere
