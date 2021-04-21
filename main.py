@@ -11,5 +11,5 @@ for i in supa.select('.hasTooltip'):        #filtram doar elementele din subclas
     print(i.a)
 #ana are mere
 #ce-i gresit cu proiectu asta
-
+#vreau sa fac barbut
 
