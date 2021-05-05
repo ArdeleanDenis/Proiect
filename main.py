@@ -1,7 +1,4 @@
-from random import randint
-from time import sleep
 import requests
-from requests import get
 from bs4 import BeautifulSoup
 import pandas as pd
 import numpy as np
@@ -12,22 +9,42 @@ locuri = []
 categorii = []
 hitsuri = []
 headers = {"Accept-Language": "en-US,en;q=0.5"}
-pages = np.arange(1, 605, 1)
+pages = np.arange(1, 60, 1)
 for page in pages:
+    # print(page)
+    page = requests.get("https://www.filarmonicabanatul.ro/index.php/component/jem/event/" + str(page) + "-concert",
+                        headers=headers)
+    soup = BeautifulSoup(page.text, 'html.parser')
+    spectacol = soup.find('dl', class_='jem-dl')
     try:
-        print(page)
-        page = requests.get("https://www.filarmonicabanatul.ro/index.php/component/jem/event/" + str(page) + "-concert", headers=headers)
-        soup = BeautifulSoup(page.text, 'html.parser')
-        spectacol = soup.find('dl', class_='jem-dl')
         titlu = spectacol.find('dd', class_='jem-title')
-        print(titlu.text)
+        spectacole.append(titlu.text)
+        # print(titlu.text)
         data = spectacol.find('dd', class_='jem-when')
-        print(data.text)
+        date.append(data.text)
+        # print(data.text)
         locul = spectacol.find('dd', class_='jem-where')
-        print(locul.text)
+        locuri.append(locul.text)
+        # print(locul.text)
         categoria = spectacol.find('dd', class_='jem-category')
-        print(categoria.text)
+        categorii.append(categoria.text)
+        # print(categoria.text)
         hits = spectacol.find('dd', class_='jem-hits')
-        print(hits.text)
+        hitsuri.append(hits.text)
+        # print(hits.text)
     except AttributeError:
-        print(" ")
+        print("")
+# print(spectacole)
+# print(date)
+# print(locuri)
+# print(categorii)
+# print(hitsuri)
+df = pd.DataFrame({'Spactacole': spectacole,
+                   'Date': date,
+                   'Sala': locuri,
+                   'Categorii': categorii,
+                   'Hitsuri': hitsuri,
+                   })
+# print(df)
+
+df.to_csv('Filarmonica Banatulv2.csv', encoding='utf-8-sig')
