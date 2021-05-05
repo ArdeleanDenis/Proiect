@@ -15,8 +15,7 @@ headers = {"Accept-Language": "en-US,en;q=0.5"}
 pages = np.arange(1, 50, 1)
 for page in pages:
     print(page)
-    page = requests.get("https://www.filarmonicabanatul.ro/index.php/component/jem/event/" + str(page) + "-concert",
-                        headers=headers)
+    page = requests.get("https://www.filarmonicabanatul.ro/index.php/component/jem/event/" + str(page) + "-concert", headers=headers)
     soup = BeautifulSoup(page.text, 'html.parser')
     spectacol = soup.find('dl', class='jem-dl')
     titlu = spectacol.find('dd', class='jem-title')
