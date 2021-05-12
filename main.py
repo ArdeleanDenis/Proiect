@@ -9,7 +9,7 @@ locuri = []
 categorii = []
 hitsuri = []
 headers = {"Accept-Language": "en-US,en;q=0.5"}
-pages = np.arange(1, 60, 1)
+pages = np.arange(1, 50, 1)
 for page in pages:
     # print(page)
     page = requests.get("https://www.filarmonicabanatul.ro/index.php/component/jem/event/" + str(page) + "-concert",
