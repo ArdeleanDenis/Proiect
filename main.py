@@ -12,29 +12,46 @@ categorii = []
 hitsuri = []
 poze = []
 headers = {"Accept-Language": "en-US,en;q=0.5"}
-pages = np.arange(1, 29, 1)
-for page in pages:
+pages = 1
+ok=0
+k=0
+while k<5:
     # print(page)
-    page = requests.get("https://www.filarmonicabanatul.ro/index.php/component/jem/event/" + str(page) + "-concert",
+    page = requests.get("https://www.filarmonicabanatul.ro/index.php/component/jem/event/" + str(pages) + "-concert",
                         headers=headers)
     soup = BeautifulSoup(page.text, 'html.parser')
     spectacol = soup.find('dl', class_='jem-dl')
     imagini_spectacol = soup.find('div', class_='jem-description event_desc')
     try:
         titlu = spectacol.find('dd', class_='jem-title')
-        spectacole.append(titlu.text)
+        if titlu:
+            spectacole.append(titlu.text)
+        else:
+            spectacole.append("nu")
         # print(titlu.text)
         data = spectacol.find('dd', class_='jem-when')
-        date.append(data.text)
+        if data:
+            date.append(data.text)
+        else:
+            date.append("nu")
         # print(data.text)
         locul = spectacol.find('dd', class_='jem-where')
-        locuri.append(locul.text)
+        if locul:
+            locuri.append(locul.text)
+        else:
+            locuri.append("nu")
         # print(locul.text)
         categoria = spectacol.find('dd', class_='jem-category')
-        categorii.append(categoria.text)
+        if categoria:
+            categorii.append(categoria.text)
+        else:
+            categorii.append("nu")
         # print(categoria.text)
         hits = spectacol.find('dd', class_='jem-hits')
-        hitsuri.append(hits.text)
+        if hits:
+            hitsuri.append(hits.text)
+        else:
+            hitsuri.append("nu")
         #print(hits.text)
         imagini = imagini_spectacol.find_all('img')
         if imagini:
@@ -50,8 +67,15 @@ for page in pages:
                 poze.append(link_complet)
         else:
             poze.append("concertul nu are afis")
+        ok=0
+        k=0
     except AttributeError:
-        print("")
+ #       print(".")
+        ok=1
+    if ok==1:
+        k+=1
+ #       print(k)
+    pages += 1
 # print(spectacole)
 # print(date)
 # print(locuri)
@@ -61,15 +85,18 @@ df = pd.DataFrame({'Spactacole': spectacole,
                    'Date': date,
                    'Sala': locuri,
                    'Categorii': categorii,
-                   'Hitsuri': hitsuri,
-                   'Poze': poze,
+            #       'Hitsuri': hitsuri,
+             #      'Poze': poze,
                    })
+
+
 # print(df)
 print(poze)
 df.to_csv('Filarmonica Banatulv2.csv', encoding='utf-8-sig')
 
 
-filepath = '/Users/Radu/Desktop/Proiect/Filarmonica Banatulv2.csv'
+
+filepath = '/Users/bumba/Desktop/Proiectfin/Filarmonica Banatulv2.csv'
 
 File = open(filepath)
 Reader = csv.reader(File)
