@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import numpy as np
+import csv
+from tkinter import *
 
 spectacole = []
 date = []
@@ -65,3 +67,55 @@ df = pd.DataFrame({'Spactacole': spectacole,
 # print(df)
 print(poze)
 df.to_csv('Filarmonica Banatulv2.csv', encoding='utf-8-sig')
+
+
+filepath = '/Users/Radu/Desktop/Proiect/Filarmonica Banatulv2.csv'
+
+File = open(filepath)
+Reader = csv.reader(File)
+Data = list(Reader)
+del (Data[0])
+
+list_of_entries = []
+for x in list(range(0, len(Data))):
+    list_of_entries.append(Data[x][2])
+
+root = Tk()
+root.geometry('400x400')
+var = StringVar(value=list_of_entries)
+listbox1 = Listbox(root, listvariable=var)
+listbox1.grid(row=0, column=0)
+
+
+def update():
+    index = listbox1.curselection()[0]
+    spectacollabel2.config(text=Data[index][1])
+    datelabel2.config(text=Data[index][2])
+    salalabel2.config(text=Data[index][3])
+    categorielabel2.config(text=Data[index][4])
+    pozelabel2.config(text=Data[index][6])
+
+    return None
+
+
+button1 = Button(root, text="Eveniment", command=update)
+button1.grid(row=6, column=0)
+
+spectacollabel = Label(root, text="Spectacole").grid(row=1, column=0, sticky="w")
+datelabel = Label(root, text="Date").grid(row=2, column=0, sticky="w")
+salalabel = Label(root, text="Sala").grid(row=3, column=0, sticky="w")
+categorielabel = Label(root, text="Categorii").grid(row=4, column=0, sticky="w")
+pozelabel = Label(root, text="Poze").grid(row=5, column=0, sticky="w")
+
+spectacollabel2 = Label(root, text="")
+spectacollabel2.grid(row=1, column=1, sticky="w")
+datelabel2 = Label(root, text="")
+datelabel2.grid(row=2, column=1, sticky="w")
+salalabel2 = Label(root, text="")
+salalabel2.grid(row=3, column=1, sticky="w")
+categorielabel2 = Label(root, text="")
+categorielabel2.grid(row=4, column=1, sticky="w")
+pozelabel2 = Label(root, text="")
+pozelabel2.grid(row=5, column=1, sticky="w")
+
+root.mainloop()
