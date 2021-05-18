@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-import numpy as np
 import csv
 from tkinter import *
 
@@ -13,9 +12,10 @@ hitsuri = []
 poze = []
 headers = {"Accept-Language": "en-US,en;q=0.5"}
 pages = 1
-ok=0
-k=0
-while k<5:
+ok = 0
+k = 0
+k2 = 0
+while k < 5:
     # print(page)
     page = requests.get("https://www.filarmonicabanatul.ro/index.php/component/jem/event/" + str(pages) + "-concert",
                         headers=headers)
@@ -28,53 +28,60 @@ while k<5:
             spectacole.append(titlu.text)
         else:
             spectacole.append("nu")
-        # print(titlu.text)
+#        print(titlu.text)
         data = spectacol.find('dd', class_='jem-when')
         if data:
             date.append(data.text)
         else:
             date.append("nu")
-        # print(data.text)
+#        print(data.text)
         locul = spectacol.find('dd', class_='jem-where')
         if locul:
             locuri.append(locul.text)
         else:
             locuri.append("nu")
-        # print(locul.text)
+#        print(locul.text)
         categoria = spectacol.find('dd', class_='jem-category')
         if categoria:
             categorii.append(categoria.text)
         else:
             categorii.append("nu")
-        # print(categoria.text)
+#        print(categoria.text)
         hits = spectacol.find('dd', class_='jem-hits')
         if hits:
             hitsuri.append(hits.text)
         else:
             hitsuri.append("nu")
-        #print(hits.text)
+        # print(hits.text)
+        k2 += 1
+#        print(k2)
+        if k2 == 24 or k2 == 25 or k2 == 26:
+            poze.append("concertul nu are afis")
+
         imagini = imagini_spectacol.find_all('img')
+
         if imagini:
 
             for imagine in imagini:
                 nume = imagine['alt']
                 link = imagine['src']
                 link_complet = ("https://www.filarmonicabanatul.ro" + link)
-               # print(nume, "https://www.filarmonicabanatul.ro" + link)
-                with open (nume.replace(' ', '-').replace('/' ,' ' ) + '.jpg', 'wb') as f:
+#                print(nume, "https://www.filarmonicabanatul.ro" + link)
+                with open(nume.replace(' ', '-').replace('/', ' ') + '.jpg', 'wb') as f:
                     im = requests.get(link_complet)
                     f.write(im.content)
                 poze.append(link_complet)
+
         else:
             poze.append("concertul nu are afis")
-        ok=0
-        k=0
+        ok = 0
+        k = 0
     except AttributeError:
- #       print(".")
-        ok=1
-    if ok==1:
-        k+=1
- #       print(k)
+        #       print(".")
+        ok = 1
+    if ok == 1:
+        k += 1
+    #       print(k)
     pages += 1
 # print(spectacole)
 # print(date)
@@ -85,16 +92,11 @@ df = pd.DataFrame({'Spactacole': spectacole,
                    'Date': date,
                    'Sala': locuri,
                    'Categorii': categorii,
-            #       'Hitsuri': hitsuri,
-             #      'Poze': poze,
+                   #       'Hitsuri': hitsuri,
+                   'Poze': poze,
                    })
 
-
-# print(df)
-print(poze)
 df.to_csv('Filarmonica Banatulv2.csv', encoding='utf-8-sig')
-
-
 
 filepath = '/Users/bumba/Desktop/Proiectfin/Filarmonica Banatulv2.csv'
 
@@ -120,10 +122,9 @@ def update():
     datelabel2.config(text=Data[index][2])
     salalabel2.config(text=Data[index][3])
     categorielabel2.config(text=Data[index][4])
-    pozelabel2.config(text=Data[index][6])
+    pozelabel2.config(text=Data[index][5])
 
     return None
-
 
 button1 = Button(root, text="Eveniment", command=update)
 button1.grid(row=6, column=0)
