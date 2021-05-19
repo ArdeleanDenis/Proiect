@@ -8,7 +8,6 @@ spectacole = []
 date = []
 locuri = []
 categorii = []
-hitsuri = []
 poze = []
 headers = {"Accept-Language": "en-US,en;q=0.5"}
 pages = 1
@@ -27,36 +26,31 @@ while k < 5:
         if titlu:
             spectacole.append(titlu.text)
         else:
-            spectacole.append("nu")
+            spectacole.append("Concertul nu are titlu")
 #        print(titlu.text)
         data = spectacol.find('dd', class_='jem-when')
         if data:
             date.append(data.text)
         else:
-            date.append("nu")
+            date.append("Concertul nu are data")
 #        print(data.text)
         locul = spectacol.find('dd', class_='jem-where')
         if locul:
             locuri.append(locul.text)
         else:
-            locuri.append("nu")
+            locuri.append("Concertul nu are sala")
 #        print(locul.text)
         categoria = spectacol.find('dd', class_='jem-category')
         if categoria:
             categorii.append(categoria.text)
         else:
-            categorii.append("nu")
+            categorii.append("Concertul nu are categorie")
 #        print(categoria.text)
-        hits = spectacol.find('dd', class_='jem-hits')
-        if hits:
-            hitsuri.append(hits.text)
-        else:
-            hitsuri.append("nu")
-        # print(hits.text)
+
         k2 += 1
 #        print(k2)
         if k2 == 24 or k2 == 25 or k2 == 26:
-            poze.append("concertul nu are afis")
+            poze.append("Concertul nu are afis")
 
         imagini = imagini_spectacol.find_all('img')
 
@@ -73,7 +67,7 @@ while k < 5:
                 poze.append(link_complet)
 
         else:
-            poze.append("concertul nu are afis")
+            poze.append("Concertul nu are afis")
         ok = 0
         k = 0
     except AttributeError:
@@ -87,12 +81,11 @@ while k < 5:
 # print(date)
 # print(locuri)
 # print(categorii)
-# print(hitsuri)
+
 df = pd.DataFrame({'Spactacole': spectacole,
                    'Date': date,
                    'Sala': locuri,
                    'Categorii': categorii,
-                   #       'Hitsuri': hitsuri,
                    'Poze': poze,
                    })
 
@@ -110,13 +103,13 @@ for x in list(range(0, len(Data))):
     list_of_entries.append(Data[x][2])
 
 root = Tk()
-root.geometry('400x400')
+root.geometry('800x500')
 var = StringVar(value=list_of_entries)
-listbox1 = Listbox(root, listvariable=var)
+listbox1 = Listbox(root,width=30, height=20, listvariable=var)
 listbox1.grid(row=0, column=0)
 
 
-def update():
+def Eveniment():
     index = listbox1.curselection()[0]
     spectacollabel2.config(text=Data[index][1])
     datelabel2.config(text=Data[index][2])
@@ -126,7 +119,7 @@ def update():
 
     return None
 
-button1 = Button(root, text="Eveniment", command=update)
+button1 = Button(root, text="Eveniment", command=Eveniment)
 button1.grid(row=6, column=0)
 
 spectacollabel = Label(root, text="Spectacole").grid(row=1, column=0, sticky="w")
